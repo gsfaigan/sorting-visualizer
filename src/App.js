@@ -2913,7 +2913,16 @@ export default function App() {
         }
       `}</style>
       <h1 className="text-3xl font-bold mb-4">Sorting Algorithm Crash Course</h1>
-      <h2 style={{ marginBottom: "20px" }}>By Gabriel Faigan</h2>
+      <h2 style={{ marginBottom: "20px" }}>
+        <a 
+          href="https://faigan.com" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-blue-400 hover:text-blue-300 underline transition-colors duration-200"
+        >
+          By Gabriel Faigan
+        </a>
+      </h2>
       
       <div className="flex gap-4 mb-4 items-center">
         <button
