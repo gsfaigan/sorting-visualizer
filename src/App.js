@@ -5,15 +5,25 @@ function bubbleSortSteps(array) {
   const steps = [];
   const arr = array.slice();
   for (let i = 0; i < arr.length - 1; i++) {
+    let swapped = false;
     for (let j = 0; j < arr.length - i - 1; j++) {
       steps.push({ type: "compare", indices: [j, j + 1], arr: arr.slice() });
       if (arr[j].value > arr[j + 1].value) {
         [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
         steps.push({ type: "swap", indices: [j, j + 1], arr: arr.slice() });
+        swapped = true;
       }
     }
     // mark the last element of this pass as sorted
     steps.push({ type: 'sorted', indices: [arr.length - i - 1], arr: arr.slice() });
+    // Early termination if no swaps occurred (O(n) best case)
+    if (!swapped) {
+      // Mark all remaining elements as sorted
+      for (let k = 0; k < arr.length - i - 1; k++) {
+        steps.push({ type: 'sorted', indices: [k], arr: arr.slice() });
+      }
+      break;
+    }
   }
   return steps;
 }
@@ -873,41 +883,146 @@ function blockSortSteps(array) {
   return steps;
 }
 
-// --- Smoothsort (Leonardo heap variant - simplified) ---
+// --- Smoothsort (Leonardo heap variant) ---
 function smoothsortSteps(array) {
   const steps = [];
   const arr = array.slice();
   const n = arr.length;
-  
-  // For simplicity, use heapsort with adaptive behavior
-  function heapify(size, root) {
-    let largest = root;
-    const left = 2 * root + 1;
-    const right = 2 * root + 2;
-    if (left < size) {
-      steps.push({ type: 'compare', indices: [left, largest], arr: arr.slice() });
-      if (arr[left].value > arr[largest].value) largest = left;
+
+  if (n <= 1) {
+    if (n === 1) steps.push({ type: 'sorted', indices: [0], arr: arr.slice() });
+    return steps;
+  }
+
+  // Leonardo numbers: 1, 1, 3, 5, 9, 15, 25, 41, 67, 109, 177, ...
+  const leo = [1, 1];
+  while (leo[leo.length - 1] < n + 1) {
+    leo.push(leo[leo.length - 1] + leo[leo.length - 2] + 1);
+  }
+
+  // State: sizes[] holds the orders of current Leonardo trees (right to left)
+  // Each tree's root is at the rightmost position of that tree
+  let sizes = [];
+
+  // Get root position of tree at index t in sizes array
+  function getRoot(upTo) {
+    let pos = -1;
+    for (let i = 0; i <= upTo; i++) {
+      pos += leo[sizes[i]];
     }
-    if (right < size) {
-      steps.push({ type: 'compare', indices: [right, largest], arr: arr.slice() });
-      if (arr[right].value > arr[largest].value) largest = right;
-    }
-    if (largest !== root) {
-      [arr[root], arr[largest]] = [arr[largest], arr[root]];
-      steps.push({ type: 'swap', indices: [root, largest], arr: arr.slice() });
-      heapify(size, largest);
+    return pos;
+  }
+
+  // Sift down within a Leonardo tree rooted at 'root' with order 'order'
+  function sift(root, order) {
+    while (order >= 2) {
+      const right = root - 1;
+      const left = root - 1 - leo[order - 2];
+
+      steps.push({ type: 'compare', indices: [left, right], arr: arr.slice() });
+      let child, childOrder;
+      if (arr[left].value > arr[right].value) {
+        child = left;
+        childOrder = order - 1;
+      } else {
+        child = right;
+        childOrder = order - 2;
+      }
+
+      steps.push({ type: 'compare', indices: [root, child], arr: arr.slice() });
+      if (arr[root].value >= arr[child].value) return;
+
+      [arr[root], arr[child]] = [arr[child], arr[root]];
+      steps.push({ type: 'swap', indices: [root, child], arr: arr.slice() });
+
+      root = child;
+      order = childOrder;
     }
   }
-  
-  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) heapify(n, i);
-  for (let end = n - 1; end > 0; end--) {
-    [arr[0], arr[end]] = [arr[end], arr[0]];
-    steps.push({ type: 'swap', indices: [0, end], arr: arr.slice() });
-    steps.push({ type: 'sorted', indices: [end], arr: arr.slice() });
-    heapify(end, 0);
+
+  // Restore heap property: make sure roots are in descending order
+  function restoreHeap(idx) {
+    // idx is index in sizes array of the tree we're fixing
+    while (idx > 0) {
+      const currRoot = getRoot(idx);
+      const prevRoot = getRoot(idx - 1);
+
+      steps.push({ type: 'compare', indices: [prevRoot, currRoot], arr: arr.slice() });
+      if (arr[prevRoot].value <= arr[currRoot].value) {
+        sift(currRoot, sizes[idx]);
+        return;
+      }
+
+      // Check if prevRoot is larger than currRoot's children
+      if (sizes[idx] >= 2) {
+        const right = currRoot - 1;
+        const left = currRoot - 1 - leo[sizes[idx] - 2];
+
+        steps.push({ type: 'compare', indices: [prevRoot, right], arr: arr.slice() });
+        if (arr[prevRoot].value <= arr[right].value) {
+          sift(currRoot, sizes[idx]);
+          return;
+        }
+
+        steps.push({ type: 'compare', indices: [prevRoot, left], arr: arr.slice() });
+        if (arr[prevRoot].value <= arr[left].value) {
+          sift(currRoot, sizes[idx]);
+          return;
+        }
+      }
+
+      [arr[currRoot], arr[prevRoot]] = [arr[prevRoot], arr[currRoot]];
+      steps.push({ type: 'swap', indices: [currRoot, prevRoot], arr: arr.slice() });
+      idx--;
+    }
+
+    if (sizes.length > 0) {
+      sift(getRoot(0), sizes[0]);
+    }
   }
-  
-  if (n > 0) steps.push({ type: 'sorted', indices: [0], arr: arr.slice() });
+
+  // BUILD PHASE: Add elements one at a time
+  for (let i = 0; i < n; i++) {
+    // Can we merge the two rightmost trees?
+    if (sizes.length >= 2 && sizes[sizes.length - 1] + 1 === sizes[sizes.length - 2]) {
+      // Merge: remove two trees, add one larger tree
+      sizes.pop();
+      sizes[sizes.length - 1]++;
+    } else if (sizes.length >= 1 && sizes[sizes.length - 1] === 1) {
+      // Add L(0) = 1 tree
+      sizes.push(0);
+    } else {
+      // Add L(1) = 1 tree
+      sizes.push(1);
+    }
+
+    restoreHeap(sizes.length - 1);
+  }
+
+  // EXTRACT PHASE: Remove max element from end, one at a time
+  for (let i = n - 1; i >= 0; i--) {
+    if (sizes.length === 0) break;
+
+    const order = sizes.pop();
+
+    if (order >= 2) {
+      // Split this tree into its two children
+      // Left child has order-1, right child has order-2
+      const leftOrder = order - 1;
+      const rightOrder = order - 2;
+
+      sizes.push(leftOrder);
+      const leftRoot = getRoot(sizes.length - 1);
+      restoreHeap(sizes.length - 1);
+
+      sizes.push(rightOrder);
+      const rightRoot = getRoot(sizes.length - 1);
+      restoreHeap(sizes.length - 1);
+    }
+
+    steps.push({ type: 'sorted', indices: [i], arr: arr.slice() });
+  }
+
   return steps;
 }
 
@@ -976,29 +1091,110 @@ function strandSortSteps(array) {
 // --- Library Sort (Gapped Insertion Sort) ---
 function librarySortSteps(array) {
   const steps = [];
-  const arr = array.slice();
-  const n = arr.length;
-  
-  // Simplified library sort: just do insertion sort with better visualization
-  for (let i = 1; i < n; i++) {
-    const key = arr[i];
-    let j = i - 1;
-    
-    steps.push({ type: 'compare', indices: [i], arr: arr.slice() });
-    
-    while (j >= 0 && arr[j].value > key.value) {
-      steps.push({ type: 'compare', indices: [j, j + 1], arr: arr.slice() });
-      arr[j + 1] = arr[j];
-      steps.push({ type: 'swap', indices: [j, j + 1], arr: arr.slice() });
-      j--;
+  const n = array.length;
+  if (n === 0) return steps;
+
+  // Library sort uses gaps between elements for faster insertion
+  // Gap factor of 2 means array has n gaps for n elements
+  const epsilon = 1; // Gap ratio: 1 means equal gaps to elements
+  const gappedSize = n * (1 + epsilon);
+  const GAP = null; // Represents empty slot
+
+  // Create gapped array with null gaps
+  const gapped = new Array(gappedSize).fill(GAP);
+
+  // Helper to get display array (compress gaps for visualization)
+  function getDisplayArr() {
+    const result = [];
+    for (let i = 0; i < gappedSize; i++) {
+      if (gapped[i] !== GAP) {
+        result.push(gapped[i]);
+      }
     }
-    
-    arr[j + 1] = key;
-    steps.push({ type: 'overwrite', indices: [j + 1], arr: arr.slice() });
+    // Pad to original size for consistent display
+    while (result.length < n) {
+      result.push({ id: result.length, value: 0 });
+    }
+    return result;
   }
-  
-  // Final sorted state
-  for (let i = 0; i < n; i++) steps.push({ type: 'sorted', indices: [i], arr: arr.slice() });
+
+  // Binary search to find insertion position (searching among non-gap elements)
+  function binarySearch(target, rightBound) {
+    let left = 0, right = rightBound;
+    while (left < right) {
+      let mid = Math.floor((left + right) / 2);
+      // Skip gaps going left
+      while (mid > left && gapped[mid] === GAP) mid--;
+      if (gapped[mid] === GAP || gapped[mid].value < target) {
+        left = mid + 1;
+        // Skip gaps
+        while (left < right && gapped[left] === GAP) left++;
+      } else {
+        right = mid;
+      }
+    }
+    return left;
+  }
+
+  // Insert first element in the middle
+  const midPos = Math.floor(gappedSize / 2);
+  gapped[midPos] = array[0];
+  steps.push({ type: 'overwrite', indices: [0], arr: getDisplayArr() });
+
+  let insertedCount = 1;
+
+  // Insert remaining elements
+  for (let i = 1; i < n; i++) {
+    const item = array[i];
+    steps.push({ type: 'compare', indices: [i], arr: getDisplayArr() });
+
+    // Find position using binary search
+    let pos = binarySearch(item.value, gappedSize);
+
+    // Find actual insertion slot (gap or shift needed)
+    // Look for nearest gap
+    let insertPos = pos;
+    while (insertPos < gappedSize && gapped[insertPos] !== GAP) insertPos++;
+
+    if (insertPos >= gappedSize) {
+      // No gap to the right, look left
+      insertPos = pos - 1;
+      while (insertPos >= 0 && gapped[insertPos] !== GAP) insertPos--;
+
+      if (insertPos < 0) {
+        // No gaps available, shift right
+        insertPos = pos;
+        for (let j = gappedSize - 1; j > insertPos; j--) {
+          if (gapped[j - 1] !== GAP) {
+            gapped[j] = gapped[j - 1];
+          }
+        }
+      } else {
+        // Shift elements left to fill the gap
+        for (let j = insertPos; j < pos - 1; j++) {
+          gapped[j] = gapped[j + 1];
+        }
+        insertPos = pos - 1;
+      }
+    } else if (insertPos > pos) {
+      // Shift elements right to the gap
+      for (let j = insertPos; j > pos; j--) {
+        gapped[j] = gapped[j - 1];
+      }
+      insertPos = pos;
+    }
+
+    gapped[insertPos] = item;
+    insertedCount++;
+    steps.push({ type: 'overwrite', indices: [insertedCount - 1], arr: getDisplayArr() });
+  }
+
+  // Compact: remove gaps and copy back
+  const result = getDisplayArr();
+  for (let i = 0; i < n; i++) {
+    steps.push({ type: 'sorted', indices: [i], arr: result });
+  }
+
   return steps;
 }
 
@@ -2116,7 +2312,7 @@ const ALGORITHM_DEFAULTS = {
   tree: { size: 80, speed: 15 },
   tournament: { size: 80, speed: 15 },
   strand: { size: 50, speed: 10 },
-  library: { size: 60, speed: 5 },
+  library: { size: 120, speed: 5 },
   patience: { size: 60, speed: 20 },
   minmaxselection: { size: 50, speed: 10 },
   oddmerge: { size: 128, speed: 15 },
@@ -2774,9 +2970,9 @@ export default function App() {
       ]
     },
     americanflag: {
-      complexity: 'O(n * k) where k is number of digits. In-place radix sort.',
+      complexity: 'O(n * k) where k is number of digits. In-place MSD radix sort.',
       steps: [
-        'Process digits from most significant to least significant (LSD variant).',
+        'Process digits from most significant to least significant (MSD).',
         'Count occurrences of each digit value.',
         'Partition array in-place by swapping elements to correct buckets.',
         'Recursively sort each bucket by next digit position.'
@@ -2792,7 +2988,7 @@ export default function App() {
       ]
     },
     patience: {
-      complexity: 'O(n log n) worst case. Based on patience solitaire game.',
+      complexity: 'O(n log n) worst case. Stable. Based on patience solitaire game.',
       steps: [
         'Build piles: place each element on leftmost pile with larger top.',
         'If no suitable pile exists, create a new pile.',
@@ -2819,12 +3015,12 @@ export default function App() {
       ]
     },
     stupid: {
-      complexity: 'O(n! * n) worst case. Generate-and-test approach.',
+      complexity: 'O((n+1)!) average, unbounded worst. Random shuffle approach.',
       steps: [
-        'Generate permutations of the array in lexicographic order.',
-        'Check if current permutation is sorted.',
-        'If sorted, done; otherwise generate next permutation.',
-        'Educational example of inefficient sorting by exhaustive search.'
+        'Randomly shuffle the entire array.',
+        'Check if the resulting permutation is sorted.',
+        'If not sorted, shuffle again and repeat.',
+        'Similar to Bogo Sort; educational example of terrible efficiency.'
       ]
     },
     spreadsort: {
