@@ -12,7 +12,7 @@ An interactive web application that visualizes 44 different sorting algorithms w
 
 ## Installation
 
-1. Clone the repository:
+1. Clone the repo:
 ```bash
 git clone https://github.com/gsfaigan/sorting-visualizer.git
 cd sorting-visualizer
@@ -28,15 +28,7 @@ npm install
 npm start
 ```
 
-4. Open your browser and navigate to `http://localhost:3000`
-
-## Usage
-
-1. Select a sorting algorithm from the list on the left
-2. Adjust the array size and speed using the sliders
-3. Click "Generate New Array" to create a new random array
-4. Click "Start" to begin the visualization
-5. Click "Stop" to halt the visualization at any time
+4. Go to `http://localhost:3000`
 
 ## Available Sorting Algorithms
 
@@ -101,18 +93,8 @@ To create a production build:
 npm run build
 ```
 
-The build files will be generated in the `build` directory.
-
 ## Technologies Used
 
 - React
 - Tailwind CSS
 - Web Audio API
-
-## Author
-
-Gabriel Faigan - [faigan.com](https://faigan.com)
-
-## License
-
-This project is open source and available for educational purposes.
