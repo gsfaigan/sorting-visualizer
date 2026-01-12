@@ -2335,6 +2335,7 @@ export default function App() {
   const [currentStepType, setCurrentStepType] = useState(null);
   const [algorithm, setAlgorithm] = useState('bubble');
   const [animateSwap, setAnimateSwap] = useState(false);
+  const [showHome, setShowHome] = useState(true);
   // Audio context for playing tones
   const audioRef = useRef(null);
   // Hold the active sorting interval so we can stop it from other UI (Stop button)
@@ -3090,6 +3091,96 @@ export default function App() {
 
   const currentInfo = ALGO_INFO[algorithm] || ALGO_INFO.bubble;
 
+  // Algorithm list for the homescreen grid
+  const algorithmList = [
+    { value: 'bubble', label: 'Bubble Sort' },
+    { value: 'selection', label: 'Selection Sort' },
+    { value: 'insertion', label: 'Insertion Sort' },
+    { value: 'merge', label: 'Merge Sort' },
+    { value: 'quick', label: 'Quick Sort' },
+    { value: 'heap', label: 'Heap Sort' },
+    { value: 'shell', label: 'Shell Sort' },
+    { value: 'counting', label: 'Counting Sort' },
+    { value: 'radix', label: 'Radix Sort' },
+    { value: 'bucket', label: 'Bucket Sort' },
+    { value: 'timsort', label: 'Timsort' },
+    { value: 'intro', label: 'Intro Sort' },
+    { value: 'pdq', label: 'PDQ Sort' },
+    { value: 'dualpivot', label: 'Dual-Pivot Quicksort' },
+    { value: 'cocktail', label: 'Cocktail Shaker' },
+    { value: 'comb', label: 'Comb Sort' },
+    { value: 'gnome', label: 'Gnome Sort' },
+    { value: 'oddeven', label: 'Odd-Even Sort' },
+    { value: 'cycle', label: 'Cycle Sort' },
+    { value: 'pancake', label: 'Pancake Sort' },
+    { value: 'stooge', label: 'Stooge Sort' },
+    { value: 'bogo', label: 'Bogo Sort' },
+    { value: 'stupid', label: 'Stupid Sort' },
+    { value: 'stalin', label: 'Stalin Sort' },
+    { value: 'bitonic', label: 'Bitonic Sort' },
+    { value: 'oddevenmerge', label: 'Odd-Even Merge Sort' },
+    { value: 'pairwise', label: 'Pairwise Network' },
+    { value: 'smooth', label: 'Smoothsort' },
+    { value: 'tree', label: 'Tree Sort' },
+    { value: 'tournament', label: 'Tournament Sort' },
+    { value: 'patience', label: 'Patience Sort' },
+    { value: 'strand', label: 'Strand Sort' },
+    { value: 'library', label: 'Library Sort' },
+    { value: 'block', label: 'Block Sort' },
+    { value: 'blockmerge', label: 'Block Merge Sort' },
+    { value: 'adaptivemerge', label: 'Adaptive Merge Sort' },
+    { value: 'franceschini', label: 'Franceschini Sort' },
+    { value: 'pigeonhole', label: 'Pigeonhole Sort' },
+    { value: 'gravity', label: 'Gravity Sort' },
+    { value: 'flash', label: 'Flash Sort' },
+    { value: 'americanflag', label: 'American Flag Sort' },
+    { value: 'proxmap', label: 'Proxmap Sort' },
+    { value: 'spreadsort', label: 'Spreadsort' },
+    { value: 'minmaxselection', label: 'Min-Max Selection' }
+  ];
+
+  // Handle algorithm selection from homescreen
+  function selectAlgorithm(algoValue) {
+    setAlgorithm(algoValue);
+    setShowHome(false);
+  }
+
+  // Homescreen view
+  if (showHome) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white p-8">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-5xl font-bold text-center mb-4">The Art of Sorting</h1>
+          <h2 className="text-center mb-12">
+            <a
+              href="https://faigan.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-300 underline transition-colors duration-200"
+            >
+              By Gabriel Faigan
+            </a>
+          </h2>
+
+          <div className="flex flex-col gap-2 max-w-2xl mx-auto">
+            {algorithmList.map(algo => (
+              <button
+                key={algo.value}
+                onClick={() => selectAlgorithm(algo.value)}
+                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-blue-500 rounded-lg px-4 py-3 flex justify-between items-center transition-all duration-200"
+              >
+                <span className="font-semibold text-white">{algo.label}</span>
+                <span className="text-sm text-gray-400">
+                  {ALGO_INFO[algo.value]?.complexity.split('.')[0] || ''}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-900 text-white p-4">
       <style>{`
@@ -3108,12 +3199,21 @@ export default function App() {
           background: #6B7280;
         }
       `}</style>
-      <h1 className="text-3xl font-bold mb-4">Sorting Algorithm Crash Course</h1>
+
+      <button
+        onClick={() => setShowHome(true)}
+        disabled={isSorting}
+        className={`absolute top-4 left-4 px-3 py-1 rounded text-sm ${isSorting ? 'bg-gray-600 text-gray-400 pointer-events-none' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
+      >
+        &larr; Back
+      </button>
+
+      <h1 className="text-3xl font-bold mb-4">The Art of Sorting</h1>
       <h2 style={{ marginBottom: "20px" }}>
-        <a 
-          href="https://faigan.com" 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <a
+          href="https://faigan.com"
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-blue-400 hover:text-blue-300 underline transition-colors duration-200"
         >
           By Gabriel Faigan
