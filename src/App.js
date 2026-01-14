@@ -3150,7 +3150,7 @@ export default function App() {
   // Homescreen view
   if (showHome) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <div className="min-h-screen bg-black text-white p-8">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-5xl font-bold text-center mb-4">The Art of Sorting</h1>
           <h2 className="text-center mb-12">
@@ -3169,10 +3169,10 @@ export default function App() {
               <button
                 key={algo.value}
                 onClick={() => selectAlgorithm(algo.value)}
-                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-blue-500 px-4 py-3 flex justify-between items-center transition-all duration-200"
+                className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-blue-500 px-4 py-3 flex justify-between items-center transition-all duration-200"
               >
                 <span className="font-semibold text-white">{algo.label}</span>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-zinc-500">
                   {ALGO_INFO[algo.value]?.complexity.split('.')[0] || ''}
                 </span>
               </button>
@@ -3184,26 +3184,26 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-900 text-white p-4">
+    <div className="flex flex-col items-center min-h-screen bg-black text-white p-4">
       <style>{`
         .algorithm-scroll::-webkit-scrollbar {
           width: 8px;
         }
         .algorithm-scroll::-webkit-scrollbar-track {
-          background: #1F2937;
+          background: #09090b;
         }
         .algorithm-scroll::-webkit-scrollbar-thumb {
-          background: #4B5563;
+          background: #27272a;
         }
         .algorithm-scroll::-webkit-scrollbar-thumb:hover {
-          background: #6B7280;
+          background: #3f3f46;
         }
       `}</style>
 
       <button
         onClick={() => setShowHome(true)}
         disabled={isSorting}
-        className={`absolute top-4 left-4 px-3 py-1 text-sm ${isSorting ? 'bg-gray-600 text-gray-400 pointer-events-none' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
+        className={`absolute top-4 left-4 px-3 py-1 text-sm ${isSorting ? 'bg-zinc-700 text-zinc-500 pointer-events-none' : 'bg-zinc-800 hover:bg-zinc-700 text-white'}`}
       >
         &larr; Back
       </button>
@@ -3224,7 +3224,7 @@ export default function App() {
         <button
           onClick={generateArray}
           disabled={isSorting}
-          className={`px-4 py-2 ${isSorting ? 'bg-gray-600 text-gray-300 pointer-events-none' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+          className={`px-4 py-2 ${isSorting ? 'bg-zinc-700 text-zinc-400 pointer-events-none' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
         >
           Generate New Array
         </button>
@@ -3236,7 +3236,7 @@ export default function App() {
         <button
           onClick={() => visualizeSorting()}
           disabled={isSorting}
-          className={`px-4 py-2 ${isSorting ? 'bg-gray-600 text-gray-300 pointer-events-none' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+          className={`px-4 py-2 ${isSorting ? 'bg-zinc-700 text-zinc-400 pointer-events-none' : 'bg-green-500 hover:bg-green-600 text-white'}`}
         >
           Start
         </button>
@@ -3244,7 +3244,7 @@ export default function App() {
         <button
           onClick={stopSorting}
           disabled={!isSorting}
-          className={`px-4 py-2 ${!isSorting ? 'bg-gray-700 text-gray-400 pointer-events-none' : 'bg-red-600 hover:bg-red-700 text-white'}`}
+          className={`px-4 py-2 ${!isSorting ? 'bg-zinc-800 text-zinc-500 pointer-events-none' : 'bg-red-600 hover:bg-red-700 text-white'}`}
         >
           Stop
         </button>
@@ -3257,7 +3257,7 @@ export default function App() {
             value={size}
             disabled={isSorting}
             onChange={(e) => setSize(Number(e.target.value))}
-            className={`w-64 px-3 py-2 bg-gray-800 border border-gray-700 text-white ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
+            className={`w-64 px-3 py-2 bg-zinc-900 border border-zinc-800 text-white ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
           >
             <option value={16}>16</option>
             <option value={32}>32</option>
@@ -3293,11 +3293,11 @@ export default function App() {
 
   {/* Main area: algorithm list + visualization (stacked on mobile, side-by-side on desktop) */}
   <div className="w-full max-w-5xl flex flex-col md:flex-row md:flex-wrap gap-4 items-start">
-    <div className="w-full md:w-56 bg-gray-800 p-2 h-64 md:h-96 flex flex-col relative order-3 md:order-1">
-      <div className="text-sm text-gray-300 font-semibold mb-2 text-center">Algorithms</div>
+    <div className="w-full md:w-56 bg-zinc-900 p-2 h-64 md:h-96 flex flex-col relative order-3 md:order-1">
+      <div className="text-sm text-zinc-400 font-semibold mb-2 text-center">Algorithms</div>
       <div className="flex-1 overflow-y-scroll space-y-1 pr-1 algorithm-scroll" style={{
         scrollbarWidth: 'thin',
-        scrollbarColor: '#4B5563 #1F2937'
+        scrollbarColor: '#27272a #09090b'
       }}>
         {([
           { value: 'adaptivemerge', label: 'Adaptive Merge Sort' },
@@ -3349,7 +3349,7 @@ export default function App() {
             key={opt.value}
             onClick={() => { if (!isSorting) setAlgorithm(opt.value); }}
             disabled={isSorting}
-            className={`w-full text-left px-3 py-2 ${algorithm === opt.value ? (isSorting ? 'bg-gray-600 text-gray-300' : 'bg-green-600 text-white') : (isSorting ? 'text-gray-500 pointer-events-none' : 'text-gray-200 hover:bg-gray-700')}`}
+            className={`w-full text-left px-3 py-2 ${algorithm === opt.value ? (isSorting ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 text-white') : (isSorting ? 'text-zinc-600 pointer-events-none' : 'text-zinc-300 hover:bg-zinc-800')}`}
           >
             {opt.label}
           </button>
@@ -3357,12 +3357,12 @@ export default function App() {
       </div>
       {/* Scroll indicator gradient */}
       <div className="absolute bottom-2 left-2 right-2 h-8 pointer-events-none" style={{
-        background: 'linear-gradient(to top, rgba(31, 41, 55, 0.95), transparent)'
+        background: 'linear-gradient(to top, rgba(24, 24, 27, 0.95), transparent)'
       }}></div>
     </div>
 
     <div className="flex-1 order-1 md:order-2 w-full">
-      <div className="relative h-64 md:h-96 w-full border border-gray-700 bg-gray-800 p-2 overflow-hidden">
+      <div className="relative h-64 md:h-96 w-full border border-zinc-800 bg-zinc-900 p-2 overflow-hidden">
         {array.map((item, idx) => {
           const barWidth = 100 / Math.max(1, array.length);
           const leftPercent = idx * barWidth;
@@ -3426,9 +3426,9 @@ export default function App() {
       </div>
     </div>
 
-    <div className="w-full md:w-full text-sm text-gray-300 px-4 order-2 md:order-3">
+    <div className="w-full md:w-full text-sm text-zinc-400 px-4 order-2 md:order-3">
       <h3 className="font-semibold">How it works</h3>
-      <div className="text-xs text-gray-400 mb-2">{currentInfo.complexity}</div>
+      <div className="text-xs text-zinc-500 mb-2">{currentInfo.complexity}</div>
       <ol className="list-decimal ml-6">
         {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
       </ol>
