@@ -3169,7 +3169,7 @@ export default function App() {
               <button
                 key={algo.value}
                 onClick={() => selectAlgorithm(algo.value)}
-                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-blue-500 rounded-lg px-4 py-3 flex justify-between items-center transition-all duration-200"
+                className="bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-blue-500 px-4 py-3 flex justify-between items-center transition-all duration-200"
               >
                 <span className="font-semibold text-white">{algo.label}</span>
                 <span className="text-sm text-gray-400">
@@ -3191,11 +3191,9 @@ export default function App() {
         }
         .algorithm-scroll::-webkit-scrollbar-track {
           background: #1F2937;
-          border-radius: 4px;
         }
         .algorithm-scroll::-webkit-scrollbar-thumb {
           background: #4B5563;
-          border-radius: 4px;
         }
         .algorithm-scroll::-webkit-scrollbar-thumb:hover {
           background: #6B7280;
@@ -3205,7 +3203,7 @@ export default function App() {
       <button
         onClick={() => setShowHome(true)}
         disabled={isSorting}
-        className={`absolute top-4 left-4 px-3 py-1 rounded text-sm ${isSorting ? 'bg-gray-600 text-gray-400 pointer-events-none' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
+        className={`absolute top-4 left-4 px-3 py-1 text-sm ${isSorting ? 'bg-gray-600 text-gray-400 pointer-events-none' : 'bg-gray-700 hover:bg-gray-600 text-white'}`}
       >
         &larr; Back
       </button>
@@ -3226,7 +3224,7 @@ export default function App() {
         <button
           onClick={generateArray}
           disabled={isSorting}
-          className={`px-4 py-2 rounded ${isSorting ? 'bg-gray-600 text-gray-300 pointer-events-none' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+          className={`px-4 py-2 ${isSorting ? 'bg-gray-600 text-gray-300 pointer-events-none' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
         >
           Generate New Array
         </button>
@@ -3238,7 +3236,7 @@ export default function App() {
         <button
           onClick={() => visualizeSorting()}
           disabled={isSorting}
-          className={`px-4 py-2 rounded ${isSorting ? 'bg-gray-600 text-gray-300 pointer-events-none' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+          className={`px-4 py-2 ${isSorting ? 'bg-gray-600 text-gray-300 pointer-events-none' : 'bg-green-500 hover:bg-green-600 text-white'}`}
         >
           Start
         </button>
@@ -3246,7 +3244,7 @@ export default function App() {
         <button
           onClick={stopSorting}
           disabled={!isSorting}
-          className={`px-4 py-2 rounded ${!isSorting ? 'bg-gray-700 text-gray-400 pointer-events-none' : 'bg-red-600 hover:bg-red-700 text-white'}`}
+          className={`px-4 py-2 ${!isSorting ? 'bg-gray-700 text-gray-400 pointer-events-none' : 'bg-red-600 hover:bg-red-700 text-white'}`}
         >
           Stop
         </button>
@@ -3259,7 +3257,7 @@ export default function App() {
             value={size}
             disabled={isSorting}
             onChange={(e) => setSize(Number(e.target.value))}
-            className={`w-64 px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
+            className={`w-64 px-3 py-2 bg-gray-800 border border-gray-700 text-white ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
           >
             <option value={16}>16</option>
             <option value={32}>32</option>
@@ -3295,7 +3293,7 @@ export default function App() {
 
   {/* Main area: algorithm list + visualization (stacked on mobile, side-by-side on desktop) */}
   <div className="w-full max-w-5xl flex flex-col md:flex-row md:flex-wrap gap-4 items-start">
-    <div className="w-full md:w-56 bg-gray-800 p-2 rounded h-64 md:h-96 flex flex-col relative order-3 md:order-1">
+    <div className="w-full md:w-56 bg-gray-800 p-2 h-64 md:h-96 flex flex-col relative order-3 md:order-1">
       <div className="text-sm text-gray-300 font-semibold mb-2 text-center">Algorithms</div>
       <div className="flex-1 overflow-y-scroll space-y-1 pr-1 algorithm-scroll" style={{
         scrollbarWidth: 'thin',
@@ -3351,7 +3349,7 @@ export default function App() {
             key={opt.value}
             onClick={() => { if (!isSorting) setAlgorithm(opt.value); }}
             disabled={isSorting}
-            className={`w-full text-left px-3 py-2 rounded ${algorithm === opt.value ? (isSorting ? 'bg-gray-600 text-gray-300' : 'bg-green-600 text-white') : (isSorting ? 'text-gray-500 pointer-events-none' : 'text-gray-200 hover:bg-gray-700')}`}
+            className={`w-full text-left px-3 py-2 ${algorithm === opt.value ? (isSorting ? 'bg-gray-600 text-gray-300' : 'bg-green-600 text-white') : (isSorting ? 'text-gray-500 pointer-events-none' : 'text-gray-200 hover:bg-gray-700')}`}
           >
             {opt.label}
           </button>
@@ -3364,7 +3362,7 @@ export default function App() {
     </div>
 
     <div className="flex-1 order-1 md:order-2 w-full">
-      <div className="relative h-64 md:h-96 w-full border border-gray-700 bg-gray-800 p-2 rounded overflow-hidden">
+      <div className="relative h-64 md:h-96 w-full border border-gray-700 bg-gray-800 p-2 overflow-hidden">
         {array.map((item, idx) => {
           const barWidth = 100 / Math.max(1, array.length);
           const leftPercent = idx * barWidth;
@@ -3417,11 +3415,11 @@ export default function App() {
                 position: 'absolute',
                 bottom: 0,
                 left: `${leftPercent}%`,
-                width: `calc(${100 / array.length}% - 2px)`,
+                width: `calc(${100 / array.length}% - 1px)`,
                 height: `${heightPercent}%`,
                 transition: animateSwap ? 'height 0.25s ease' : 'none',
               }}
-              className={`${colorClass} mx-[1px] rounded-t`}
+              className={`${colorClass} mx-[0.5px]`}
             />
           );
         })}
