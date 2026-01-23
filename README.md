@@ -1,14 +1,13 @@
 # Sorting Visualizer
 
-An interactive web application that visualizes 44 different sorting algorithms with real-time audio feedback.
+An interactive web application that visualizes 44 sorting, 7 search, and 7 pathfinding algorithms with real-time audio feedback.
 
 ## Features
 
-- Visual representation of sorting algorithms in action
+- Visual representations of sorting, searching, and pathfinding algorithms in action
 - Real-time audio feedback corresponding to element values
-- Adjustable array size and sorting speed
-- Educational descriptions with time complexity information
-- Support for 44 different sorting algorithms
+- Adjustable array size, grid dimensions, and algorithm execution speed
+- Descriptions with time and space complexity analysis
 
 ## Installation
 
@@ -27,8 +26,6 @@ npm install
 ```bash
 npm start
 ```
-
-4. Go to `http://localhost:3000`
 
 ## Available Sorting Algorithms
 
@@ -86,15 +83,20 @@ npm start
 - Bogo Sort
 - Stupid Sort
 
-## Building for Production
+### Searching Algorithms
+- Linear Search
+- Binary Search
+- Jump Search
+- Interpolation Search
+- Exponential Search
+- Ternary Search
+- Fibonacci Search
 
-To create a production build:
-```bash
-npm run build
-```
-
-## Technologies Used
-
-- React
-- Tailwind CSS
-- Web Audio API
+### Pathfinding Algorithms
+- Dijkstra's Search
+- A* Search
+- Breadth-First Search
+- Depth-First Search
+- Greedy Best-First Search
+- Bidirectional BFS
+- Jump Point Search
