@@ -498,6 +498,7 @@ export default function PriorityQueueVisualizer({ onBack }) {
   const pseudoLines = PSEUDOCODE[currentPseudo] || [];
   const complexityData = mode === 'array' ? COMPLEXITY_ARRAY : COMPLEXITY_LOL;
 
+  // eslint-disable-next-line no-unused-vars
   const isEmpty = mode === 'array'
     ? displayItems.length === 0
     : displayLists.every(list => list.length === 0);

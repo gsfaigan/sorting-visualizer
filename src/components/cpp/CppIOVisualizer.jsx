@@ -543,10 +543,12 @@ export default function CppIOVisualizer({ onBack, initialTab = 'cout' }) {
     else if (activeTab === 'file') setScenario('write');
     else setScenario('parse');
     animator.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   useEffect(() => {
     animator.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenario]);
 
   return (

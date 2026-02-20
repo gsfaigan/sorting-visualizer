@@ -648,10 +648,12 @@ export default function CppMemoryVisualizer({ onBack, initialTab = 'memory' }) {
     if (activeTab === 'memory') setScenario('locals');
     else if (activeTab === 'pointers') setScenario('declare');
     animator.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   useEffect(() => {
     animator.reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenario]);
 
   return (

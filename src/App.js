@@ -41,13 +41,6 @@ export default function App() {
     // Keep selectedCategory so Home shows the algorithm list for that category
   };
 
-  const handleBackToHome = () => {
-    // Go all the way back to the main home page
-    setCurrentView('home');
-    setInitialAlgorithm(null);
-    setSelectedCategory(null);
-  };
-
   switch (currentView) {
     case 'sort':
       return <SortingVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;

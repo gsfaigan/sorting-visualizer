@@ -266,7 +266,8 @@ export default function BSTAlgorithmsVisualizer({ onBack }) {
     [nodes, rootId]
   );
 
-  // Second tree layout for isSameTree
+  // Second tree layout for isSameTree (reserved for future use)
+  // eslint-disable-next-line no-unused-vars
   const secondTreeLayout = useMemo(() => {
     if (!secondTree) return { positions: {}, width: 0, height: 0 };
     return layoutTree(secondTree.nodes, secondTree.rootId);
@@ -1114,6 +1115,7 @@ export default function BSTAlgorithmsVisualizer({ onBack }) {
     setIsPlaying(false);
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
   const reset = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);

@@ -170,6 +170,7 @@ export default function TowerOfHanoiVisualizer({ onBack }) {
     return () => {
       if (playIntervalRef.current) clearTimeout(playIntervalRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, currentStep, speed, steps.length]);
 
   const stepForward = useCallback(() => {
@@ -357,7 +358,7 @@ export default function TowerOfHanoiVisualizer({ onBack }) {
 
     // Current peg disk count for lift position
     const fromDisks = currentState[`state${from}`] || [];
-    const liftFromY = baseY - fromDisks.length * diskHeight;
+    void fromDisks; // used for reference
 
     const travelY = baseY - pegHeight - 30; // Above all pegs
 

@@ -1,6 +1,6 @@
 # Until It Clicks
 
-An interactive web application for visualizing algorithms, data structures, and programming concepts with real-time audio feedback and step-by-step pseudocode.
+An interactive web application for visualizing algorithms, data structures, and programming concepts with real-time audio feedback.
 
 ## Features
 
@@ -54,8 +54,7 @@ Dijkstra's, A*, BFS, DFS, Greedy Best-First, Bidirectional BFS, Jump Point Searc
 - **Stack & Queue** - Push/pop and enqueue/dequeue with LIFO/FIFO visualization
 - **Heap** - Min/Max heap with insert, extract, and heapify
 - **Priority Queue** - Priority-based operations with heap backing
-- **Binary Search Tree** - Insert, delete, search with tree visualization
-- **BST Recursive Algorithms** - Inorder, preorder, postorder, height, count, sum, min, max, search, validate, mirror, diameter, path sum, LCA, level order
+- **Binary Search Tree** - Insert, delete, search with tree visualization, inorder, preorder, postorder, height, count, sum, min, max, search, validate, mirror, diameter, path sum, LCA, level order
 - **N-ary Tree** - BFS, DFS, height, count, sum operations
 
 ## C++ Essentials

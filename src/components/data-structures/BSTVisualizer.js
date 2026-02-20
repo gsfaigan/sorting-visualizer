@@ -4,7 +4,6 @@ import PseudocodePanel from '../shared/PseudocodePanel';
 import CourseCallout from '../shared/CourseCallout';
 import {
   layoutTree,
-  computeHeight,
   computeBalanceFactor,
   buildTreeFromValues,
 } from '../../utils/treeLayout';
