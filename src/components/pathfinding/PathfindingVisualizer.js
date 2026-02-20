@@ -10,8 +10,8 @@ import {
   PATHFINDING_ALGO_INFO,
   PATHFINDING_ALGORITHM_DEFAULTS,
   pathfindingAlgorithmList
-} from '../algorithms/pathfinding';
-import { positionToFrequency, playTone } from '../utils/audio';
+} from '../../algorithms/pathfinding';
+import { positionToFrequency, playTone } from '../../utils/audio';
 
 const GRID_ROWS = 20;
 const GRID_COLS = 40;

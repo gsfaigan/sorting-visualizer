@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import PseudocodePanel from './PseudocodePanel';
-import CallStackPanel from './CallStackPanel';
-import CourseCallout from './CourseCallout';
+import PseudocodePanel from '../shared/PseudocodePanel';
+import CallStackPanel from '../shared/CallStackPanel';
+import CourseCallout from '../shared/CourseCallout';
 
 // Modes
 const modes = [

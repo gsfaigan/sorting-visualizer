@@ -10,8 +10,8 @@ import {
   SEARCH_ALGO_INFO,
   SEARCH_ALGORITHM_DEFAULTS,
   searchAlgorithmList
-} from '../algorithms/search';
-import { valueToFrequency, playTone } from '../utils/audio';
+} from '../../algorithms/search';
+import { valueToFrequency, playTone } from '../../utils/audio';
 
 export default function SearchVisualizer({ onBack, initialAlgorithm }) {
   const [array, setArray] = useState([]);

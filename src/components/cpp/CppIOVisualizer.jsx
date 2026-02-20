@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useAnimator } from '../hooks/useAnimator';
+import { useAnimator } from '../../hooks/useAnimator';
 
 // Tab definitions
 const tabs = [

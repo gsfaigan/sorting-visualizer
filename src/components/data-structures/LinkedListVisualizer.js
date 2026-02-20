@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { useAnimator } from '../hooks/useAnimator';
-import PseudocodePanel from './PseudocodePanel';
-import CourseCallout from './CourseCallout';
+import { useAnimator } from '../../hooks/useAnimator';
+import PseudocodePanel from '../shared/PseudocodePanel';
+import CourseCallout from '../shared/CourseCallout';
 
 // ============================================
 // PSEUDOCODE DEFINITIONS

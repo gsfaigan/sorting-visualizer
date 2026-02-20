@@ -1,20 +1,27 @@
 import React, { useState } from "react";
-import Home from "./components/Home";
-import SortingVisualizer from "./components/SortingVisualizer";
-import SearchVisualizer from "./components/SearchVisualizer";
-import PathfindingVisualizer from "./components/PathfindingVisualizer";
-import LinkedListVisualizer from "./components/LinkedListVisualizer";
-import StackQueueVisualizer from "./components/StackQueueVisualizer";
-import HeapVisualizer from "./components/HeapVisualizer";
-import PriorityQueueVisualizer from "./components/PriorityQueueVisualizer";
-import BSTVisualizer from "./components/BSTVisualizer";
-import BSTAlgorithmsVisualizer from "./components/BSTAlgorithmsVisualizer";
-import NaryTreeVisualizer from "./components/NaryTreeVisualizer";
-import TowerOfHanoiVisualizer from "./components/TowerOfHanoiVisualizer";
-import CppIOVisualizer from "./visualizers/CppIOVisualizer";
-import CppMemoryVisualizer from "./visualizers/CppMemoryVisualizer";
-import BigOVisualizer from "./visualizers/BigOVisualizer";
-import BashVisualizer from "./visualizers/BashVisualizer";
+// Shared
+import Home from "./components/shared/Home";
+// Sorting
+import SortingVisualizer from "./components/sorting/SortingVisualizer";
+// Searching
+import SearchVisualizer from "./components/searching/SearchVisualizer";
+// Pathfinding
+import PathfindingVisualizer from "./components/pathfinding/PathfindingVisualizer";
+// Data Structures
+import LinkedListVisualizer from "./components/data-structures/LinkedListVisualizer";
+import StackQueueVisualizer from "./components/data-structures/StackQueueVisualizer";
+import HeapVisualizer from "./components/data-structures/HeapVisualizer";
+import PriorityQueueVisualizer from "./components/data-structures/PriorityQueueVisualizer";
+import BSTVisualizer from "./components/data-structures/BSTVisualizer";
+import BSTAlgorithmsVisualizer from "./components/data-structures/BSTAlgorithmsVisualizer";
+import NaryTreeVisualizer from "./components/data-structures/NaryTreeVisualizer";
+// C++ Essentials
+import TowerOfHanoiVisualizer from "./components/cpp/TowerOfHanoiVisualizer";
+import CppIOVisualizer from "./components/cpp/CppIOVisualizer";
+import CppMemoryVisualizer from "./components/cpp/CppMemoryVisualizer";
+import BigOVisualizer from "./components/cpp/BigOVisualizer";
+// Bash & Unix
+import BashVisualizer from "./components/bash/BashVisualizer";
 
 export default function App() {
   const [currentView, setCurrentView] = useState('home');

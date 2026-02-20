@@ -1,8 +1,8 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { layoutTree, buildTreeFromValues } from '../utils/treeLayout';
-import CallStackPanel from './CallStackPanel';
-import PseudocodePanel from './PseudocodePanel';
-import CourseCallout from './CourseCallout';
+import { layoutTree, buildTreeFromValues } from '../../utils/treeLayout';
+import CallStackPanel from '../shared/CallStackPanel';
+import PseudocodePanel from '../shared/PseudocodePanel';
+import CourseCallout from '../shared/CourseCallout';
 
 // Algorithm list
 const bstAlgoList = [

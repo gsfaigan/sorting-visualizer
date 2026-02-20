@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useAnimator } from '../hooks/useAnimator';
-import PseudocodePanel from './PseudocodePanel';
-import CourseCallout from './CourseCallout';
+import { useAnimator } from '../../hooks/useAnimator';
+import PseudocodePanel from '../shared/PseudocodePanel';
+import CourseCallout from '../shared/CourseCallout';
 import {
   layoutTree,
   computeHeight,
   computeBalanceFactor,
   buildTreeFromValues,
-} from '../utils/treeLayout';
+} from '../../utils/treeLayout';
 
 // ============================================
 // PSEUDOCODE DEFINITIONS

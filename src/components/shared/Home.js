@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { searchAlgorithmList, SEARCH_ALGO_INFO } from '../algorithms/search';
-import { pathfindingAlgorithmList, PATHFINDING_ALGO_INFO } from '../algorithms/pathfinding';
+import { searchAlgorithmList, SEARCH_ALGO_INFO } from '../../algorithms/search';
+import { pathfindingAlgorithmList, PATHFINDING_ALGO_INFO } from '../../algorithms/pathfinding';
 
 // Sorting algorithm list (alphabetically sorted)
 const sortingAlgorithmList = [
