@@ -193,113 +193,81 @@ export default function SearchVisualizer({ onBack, initialAlgorithm }) {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-black text-white p-4">
-      <style>{`
-        .algorithm-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .algorithm-scroll::-webkit-scrollbar-track {
-          background: #09090b;
-        }
-        .algorithm-scroll::-webkit-scrollbar-thumb {
-          background: #27272a;
-        }
-        .algorithm-scroll::-webkit-scrollbar-thumb:hover {
-          background: #3f3f46;
-        }
-      `}</style>
-
-      <button
-        onClick={onBack}
-        disabled={isSearching}
-        className={`absolute top-4 left-4 px-3 py-1 text-sm ${isSearching ? 'bg-zinc-700 text-zinc-500 pointer-events-none' : 'bg-zinc-800 hover:bg-zinc-700 text-white'}`}
-      >
-        &larr; Back
-      </button>
-
-      <h1 className="text-3xl font-bold mb-6">Search Algorithm Visualizer</h1>
-
-      <div className="flex gap-4 mb-4 items-center flex-wrap justify-center">
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
         <button
-          onClick={generateArray}
+          onClick={onBack}
           disabled={isSearching}
-          className={`px-4 py-2 ${isSearching ? 'bg-zinc-700 text-zinc-400 pointer-events-none' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+          className={`px-3 py-1 text-sm ${isSearching ? 'bg-zinc-700 text-zinc-500' : 'bg-zinc-800 hover:bg-zinc-700'}`}
         >
-          Generate New Array
+          &larr; Back
         </button>
-
-        <div className="flex items-center gap-2">
-          <label className="text-sm">Target:</label>
-          <input
-            type="number"
-            min="5"
-            max="105"
-            value={target}
+        <h1 className="text-sm font-semibold tracking-widest text-zinc-300">SEARCH ALGORITHM VISUALIZER</h1>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-zinc-500">Target:</span>
+            <input
+              type="number"
+              min="5"
+              max="105"
+              value={target}
+              disabled={isSearching}
+              onChange={(e) => setTarget(Number(e.target.value))}
+              className={`w-16 px-2 py-1 text-sm bg-zinc-900 border border-zinc-700 text-white ${isSearching ? 'opacity-60' : ''}`}
+            />
+          </div>
+          <button
+            onClick={generateArray}
             disabled={isSearching}
-            onChange={(e) => setTarget(Number(e.target.value))}
-            className={`w-20 px-2 py-1 bg-zinc-900 border border-zinc-700 text-white ${isSearching ? 'opacity-60' : ''}`}
-          />
+            className={`px-3 py-1 text-sm ${isSearching ? 'bg-zinc-700 text-zinc-400' : 'bg-blue-600 hover:bg-blue-500'}`}
+          >
+            Generate
+          </button>
+          <button
+            onClick={visualizeSearch}
+            disabled={isSearching}
+            className={`px-3 py-1 text-sm ${isSearching ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 hover:bg-green-500'}`}
+          >
+            Start
+          </button>
+          <button
+            onClick={stopSearch}
+            disabled={!isSearching}
+            className={`px-3 py-1 text-sm ${!isSearching ? 'bg-zinc-800 text-zinc-500' : 'bg-red-600 hover:bg-red-500'}`}
+          >
+            Stop
+          </button>
         </div>
-
-        <button
-          onClick={visualizeSearch}
-          disabled={isSearching}
-          className={`px-4 py-2 ${isSearching ? 'bg-zinc-700 text-zinc-400 pointer-events-none' : 'bg-green-500 hover:bg-green-600 text-white'}`}
-        >
-          Start Search
-        </button>
-
-        <button
-          onClick={stopSearch}
-          disabled={!isSearching}
-          className={`px-4 py-2 ${!isSearching ? 'bg-zinc-800 text-zinc-500 pointer-events-none' : 'bg-red-600 hover:bg-red-700 text-white'}`}
-        >
-          Stop
-        </button>
       </div>
 
+      {/* Result Banner */}
       {searchResult && (
-        <div className={`mb-4 px-4 py-2 ${searchResult === 'found' ? 'bg-green-600' : 'bg-red-600'}`}>
+        <div className={`px-4 py-2 text-center text-sm ${searchResult === 'found' ? 'bg-green-600' : 'bg-red-600'}`}>
           {searchResult === 'found' ? `Found ${target} at index ${foundIndex}!` : `${target} not found in array`}
         </div>
       )}
 
-      <div className="flex flex-col items-center mb-4">
-        <label>Array Size: {size}</label>
-        <input
-          type="range"
-          min="10"
-          max="100"
-          value={size}
-          disabled={isSearching}
-          onChange={(e) => setSize(Number(e.target.value))}
-          className={`w-64 ${isSearching ? 'opacity-60 pointer-events-none' : ''}`}
-        />
-      </div>
-
-      <div className="flex flex-col items-center mb-8">
-        <label>Speed (ms): {speed}</label>
-        <input
-          type="range"
-          min="10"
-          max="200"
-          value={speed}
-          disabled={isSearching}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-          className={`w-64 ${isSearching ? 'opacity-60 pointer-events-none' : ''}`}
-        />
-      </div>
-
-      <div className="w-full max-w-5xl flex flex-col md:flex-row md:flex-wrap gap-4 items-start">
-        <div className="w-full md:w-56 bg-zinc-900 p-2 h-64 md:h-96 flex flex-col relative order-3 md:order-1">
-          <div className="text-sm text-zinc-400 font-semibold mb-2 text-center">Algorithms</div>
-          <div className="flex-1 overflow-y-scroll space-y-1 pr-1 algorithm-scroll">
+      {/* Main Content */}
+      <div className="flex-1 flex p-4 gap-4 overflow-auto">
+        {/* Algorithm List */}
+        <div className="w-48 bg-zinc-950 border border-zinc-800 rounded flex flex-col">
+          <div className="px-3 py-2 border-b border-zinc-800 text-xs text-zinc-500 uppercase tracking-wider">
+            Algorithms
+          </div>
+          <div className="flex-1 overflow-auto p-2 space-y-1">
             {searchAlgorithmList.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => { if (!isSearching) setAlgorithm(opt.value); }}
                 disabled={isSearching}
-                className={`w-full text-left px-3 py-2 ${algorithm === opt.value ? (isSearching ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 text-white') : (isSearching ? 'text-zinc-600 pointer-events-none' : 'text-zinc-300 hover:bg-zinc-800')}`}
+                className={`w-full text-left px-3 py-2 text-sm rounded transition-colors ${
+                  algorithm === opt.value
+                    ? 'bg-green-600 text-white'
+                    : isSearching
+                      ? 'text-zinc-600'
+                      : 'text-zinc-300 hover:bg-zinc-800'
+                }`}
               >
                 {opt.label}
               </button>
@@ -307,83 +275,142 @@ export default function SearchVisualizer({ onBack, initialAlgorithm }) {
           </div>
         </div>
 
-        <div className="flex-1 order-1 md:order-2 w-full">
-          <div className="relative h-64 md:h-96 w-full border border-zinc-800 bg-zinc-900 p-2 overflow-hidden">
-            {array.map((item, idx) => {
-              const barWidth = 100 / Math.max(1, array.length);
-              const leftPercent = idx * barWidth;
-              const minVal = 5;
-              const maxVal = 105;
-              const v = Math.min(Math.max(item.value, minVal), maxVal);
-              let heightPercent = ((v - minVal) / (maxVal - minVal)) * 100;
-              if (heightPercent < 0.5) heightPercent = 0.5;
+        {/* Visualization */}
+        <div className="flex-1 flex flex-col gap-4">
+          {/* Controls */}
+          <div className="flex items-center gap-6 bg-zinc-950 border border-zinc-800 rounded px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500">Size:</span>
+              <input
+                type="range"
+                min="10"
+                max="100"
+                value={size}
+                disabled={isSearching}
+                onChange={(e) => setSize(Number(e.target.value))}
+                className={`w-24 ${isSearching ? 'opacity-60' : ''}`}
+              />
+              <span className="text-xs text-zinc-400 w-8">{size}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500">Speed:</span>
+              <input
+                type="range"
+                min="10"
+                max="200"
+                value={speed}
+                disabled={isSearching}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+                className={`w-24 ${isSearching ? 'opacity-60' : ''}`}
+              />
+              <span className="text-xs text-zinc-400 w-12">{speed}ms</span>
+            </div>
+          </div>
 
-              const colorClass = getBarColor(idx);
+          {/* Bar Chart */}
+          <div className="flex-1 bg-zinc-950 border border-zinc-800 rounded p-4">
+            <div className="relative h-full w-full">
+              {array.map((item, idx) => {
+                const barWidth = 100 / Math.max(1, array.length);
+                const leftPercent = idx * barWidth;
+                const minVal = 5;
+                const maxVal = 105;
+                const v = Math.min(Math.max(item.value, minVal), maxVal);
+                let heightPercent = ((v - minVal) / (maxVal - minVal)) * 100;
+                if (heightPercent < 0.5) heightPercent = 0.5;
 
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: `${leftPercent}%`,
-                    width: `calc(${100 / array.length}% - 1px)`,
-                    height: `${heightPercent}%`,
-                  }}
-                  className={`${colorClass} mx-[0.5px] transition-all duration-100`}
-                />
-              );
-            })}
-            {/* Target line */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: `${((target - 5) / 100) * 100}%`,
-                left: 0,
-                right: 0,
-                height: '2px',
-                backgroundColor: '#ef4444',
-                opacity: 0.7
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: `${((target - 5) / 100) * 100 + 1}%`,
-                right: '8px',
-                fontSize: '12px',
-                color: '#ef4444'
-              }}
-            >
-              Target: {target}
+                const colorClass = getBarColor(idx);
+
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: `${leftPercent}%`,
+                      width: `calc(${100 / array.length}% - 1px)`,
+                      height: `${heightPercent}%`,
+                    }}
+                    className={`${colorClass} mx-[0.5px] transition-all duration-100`}
+                  />
+                );
+              })}
+              {/* Target line */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: `${((target - 5) / 100) * 100}%`,
+                  left: 0,
+                  right: 0,
+                  height: '2px',
+                  backgroundColor: '#ef4444',
+                  opacity: 0.7
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: `${((target - 5) / 100) * 100 + 1}%`,
+                  right: '8px',
+                  fontSize: '12px',
+                  color: '#ef4444'
+                }}
+              >
+                Target: {target}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="w-full md:w-full text-sm text-zinc-400 px-4 order-2 md:order-3">
-          <h3 className="font-semibold">How it works</h3>
-          <div className="text-xs text-zinc-500 mb-2">{currentInfo.complexity}</div>
-          <ol className="list-decimal ml-6">
-            {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
-          </ol>
-          <div className="mt-4">
-            <h4 className="font-semibold mb-2">Legend</h4>
-            <div className="flex flex-wrap gap-4 text-xs">
-              <div className="flex items-center gap-1"><div className="w-4 h-4 bg-blue-400"></div> Unchecked</div>
-              <div className="flex items-center gap-1"><div className="w-4 h-4 bg-yellow-400"></div> Checking</div>
-              <div className="flex items-center gap-1"><div className="w-4 h-4 bg-zinc-600"></div> Eliminated</div>
-              <div className="flex items-center gap-1"><div className="w-4 h-4 bg-green-500"></div> Found</div>
+        {/* Info Panel */}
+        <div className="w-72 space-y-4">
+          <div className="bg-zinc-900 border border-zinc-700 p-4 rounded">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">How It Works</div>
+            <div className="text-xs text-zinc-500 mb-3">{currentInfo.complexity}</div>
+            <ol className="text-sm text-zinc-300 space-y-1 list-decimal ml-4">
+              {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
+            </ol>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-700 p-4 rounded">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">Legend</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-blue-400"></div>
+                <span className="text-zinc-400">Unchecked</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-yellow-400"></div>
+                <span className="text-zinc-400">Checking</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-zinc-600"></div>
+                <span className="text-zinc-400">Eliminated</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-green-500"></div>
+                <span className="text-zinc-400">Found</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-700 p-4 rounded">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">Search Types</div>
+            <div className="text-xs text-zinc-400 space-y-2">
+              <div><span className="text-green-400">Linear</span>: O(n) - check each element</div>
+              <div><span className="text-green-400">Binary</span>: O(log n) - requires sorted array</div>
+              <div><span className="text-green-400">Jump</span>: O(√n) - block jumping</div>
             </div>
           </div>
         </div>
       </div>
 
-      <footer className="text-center py-4 mt-8">
+      <footer className="text-center py-2 border-t border-zinc-800">
         <a
           href="https://faigan.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-zinc-500 hover:text-blue-400 transition-colors duration-200"
+          className="text-zinc-500 hover:text-blue-400 transition-colors duration-200 text-xs"
         >
           faigan.com
         </a>

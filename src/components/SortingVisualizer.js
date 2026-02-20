@@ -3185,257 +3185,282 @@ export default function SortingVisualizer({ onBack, initialAlgorithm }) {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-black text-white p-4">
-      <style>{`
-        .algorithm-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .algorithm-scroll::-webkit-scrollbar-track {
-          background: #09090b;
-        }
-        .algorithm-scroll::-webkit-scrollbar-thumb {
-          background: #27272a;
-        }
-        .algorithm-scroll::-webkit-scrollbar-thumb:hover {
-          background: #3f3f46;
-        }
-      `}</style>
-
-      <button
-        onClick={() => onBack()}
-        disabled={isSorting}
-        className={`absolute top-4 left-4 px-3 py-1 text-sm ${isSorting ? 'bg-zinc-700 text-zinc-500 pointer-events-none' : 'bg-zinc-800 hover:bg-zinc-700 text-white'}`}
-      >
-        &larr; Back
-      </button>
-
-      <h1 className="text-3xl font-bold mb-6">The Art of Sorting</h1>
-      
-      <div className="flex gap-4 mb-4 items-center">
+    <div className="h-screen bg-black text-white flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 shrink-0">
         <button
-          onClick={generateArray}
+          onClick={() => onBack()}
           disabled={isSorting}
-          className={`px-4 py-2 ${isSorting ? 'bg-zinc-700 text-zinc-400 pointer-events-none' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+          className={`px-3 py-1 text-sm ${isSorting ? 'bg-zinc-700 text-zinc-500' : 'bg-zinc-800 hover:bg-zinc-700'}`}
         >
-          Generate New Array
+          &larr; Back
         </button>
-        {/* Algorithm selector moved to a left-side list next to the visualization */}
-        <label className="flex items-center text-sm ml-2">
-          <input type="checkbox" checked={animateSwap} onChange={(e) => setAnimateSwap(e.target.checked)} className="mr-2" />
-          Animate swaps
-        </label>
-        <button
-          onClick={() => visualizeSorting()}
-          disabled={isSorting}
-          className={`px-4 py-2 ${isSorting ? 'bg-zinc-700 text-zinc-400 pointer-events-none' : 'bg-green-500 hover:bg-green-600 text-white'}`}
-        >
-          Start
-        </button>
-
-        <button
-          onClick={stopSorting}
-          disabled={!isSorting}
-          className={`px-4 py-2 ${!isSorting ? 'bg-zinc-800 text-zinc-500 pointer-events-none' : 'bg-red-600 hover:bg-red-700 text-white'}`}
-        >
-          Stop
-        </button>
-      </div>
-
-      <div className="flex flex-col items-center mb-4">
-        <label>Array Size: {size}</label>
-        {(algorithm === 'bitonic' || algorithm === 'oddevenmerge' || algorithm === 'pairwise') ? (
-          <select
-            value={size}
-            disabled={isSorting}
-            onChange={(e) => setSize(Number(e.target.value))}
-            className={`w-64 px-3 py-2 bg-zinc-900 border border-zinc-800 text-white ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
-          >
-            <option value={16}>16</option>
-            <option value={32}>32</option>
-            <option value={64}>64</option>
-            <option value={128}>128</option>
-            <option value={256}>256</option>
-          </select>
-        ) : (
-          <input
-            type="range"
-            min="10"
-            max="250"
-            value={size}
-            disabled={isSorting}
-            onChange={(e) => setSize(Number(e.target.value))}
-            className={`w-64 ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
-          />
-        )}
-      </div>
-
-      <div className="flex flex-col items-center mb-8">
-        <label>Speed (ms): {speed}</label>
-        <input
-          type="range"
-          min="1"
-          max="30"
-          value={speed}
-          disabled={isSorting}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-          className={`w-64 ${isSorting ? 'opacity-60 pointer-events-none' : ''}`}
-        />
-      </div>
-
-  {/* Main area: algorithm list + visualization (stacked on mobile, side-by-side on desktop) */}
-  <div className="w-full max-w-5xl flex flex-col md:flex-row md:flex-wrap gap-4 items-start">
-    <div className="w-full md:w-56 bg-zinc-900 p-2 h-64 md:h-96 flex flex-col relative order-3 md:order-1">
-      <div className="text-sm text-zinc-400 font-semibold mb-2 text-center">Algorithms</div>
-      <div className="flex-1 overflow-y-scroll space-y-1 pr-1 algorithm-scroll" style={{
-        scrollbarWidth: 'thin',
-        scrollbarColor: '#27272a #09090b'
-      }}>
-        {([
-          { value: 'adaptivemerge', label: 'Adaptive Merge Sort' },
-          { value: 'americanflag', label: 'American Flag Sort' },
-          { value: 'bitonic', label: 'Bitonic Sort' },
-          { value: 'block', label: 'Block Sort' },
-          { value: 'blockmerge', label: 'Block Merge Sort' },
-          { value: 'bogo', label: 'Bogo Sort' },
-          { value: 'bubble', label: 'Bubble Sort' },
-          { value: 'bucket', label: 'Bucket Sort' },
-          { value: 'cocktail', label: 'Cocktail Shaker' },
-          { value: 'comb', label: 'Comb Sort' },
-          { value: 'counting', label: 'Counting Sort' },
-          { value: 'cycle', label: 'Cycle Sort' },
-          { value: 'dualpivot', label: 'Dual-Pivot Quicksort' },
-          { value: 'flash', label: 'Flash Sort' },
-          { value: 'franceschini', label: 'Franceschini Sort' },
-          { value: 'gnome', label: 'Gnome Sort' },
-          { value: 'gravity', label: 'Gravity Sort' },
-          { value: 'heap', label: 'Heap Sort' },
-          { value: 'insertion', label: 'Insertion Sort' },
-          { value: 'intro', label: 'Intro Sort' },
-          { value: 'library', label: 'Library Sort' },
-          { value: 'merge', label: 'Merge Sort' },
-          { value: 'minmaxselection', label: 'Min-Max Selection Sort' },
-          { value: 'oddeven', label: 'Odd-Even Sort' },
-          { value: 'oddevenmerge', label: 'Odd-Even Merge Sort' },
-          { value: 'pairwise', label: 'Pairwise Sorting Network' },
-          { value: 'pancake', label: 'Pancake Sort' },
-          { value: 'patience', label: 'Patience Sort' },
-          { value: 'pdq', label: 'PDQ Sort' },
-          { value: 'pigeonhole', label: 'Pigeonhole Sort' },
-          { value: 'proxmap', label: 'Proxmap Sort' },
-          { value: 'quick', label: 'Quick Sort' },
-          { value: 'radix', label: 'Radix Sort' },
-          { value: 'selection', label: 'Selection Sort' },
-          { value: 'shell', label: 'Shell Sort' },
-          { value: 'smooth', label: 'Smoothsort' },
-          { value: 'spreadsort', label: 'Spreadsort' },
-          { value: 'stalin', label: 'Stalin Sort' },
-          { value: 'stooge', label: 'Stooge Sort' },
-          { value: 'strand', label: 'Strand Sort' },
-          { value: 'stupid', label: 'Stupid Sort' },
-          { value: 'timsort', label: 'Timsort (simplified)' },
-          { value: 'tournament', label: 'Tournament Sort' },
-          { value: 'tree', label: 'Tree Sort' }
-        ]).map(opt => (
+        <h1 className="text-sm font-semibold tracking-widest text-zinc-300">SORTING ALGORITHM VISUALIZER</h1>
+        <div className="flex items-center gap-3">
+          <label className="flex items-center text-xs text-zinc-400">
+            <input type="checkbox" checked={animateSwap} onChange={(e) => setAnimateSwap(e.target.checked)} className="mr-1" />
+            Animate
+          </label>
           <button
-            key={opt.value}
-            onClick={() => { if (!isSorting) setAlgorithm(opt.value); }}
+            onClick={generateArray}
             disabled={isSorting}
-            className={`w-full text-left px-3 py-2 ${algorithm === opt.value ? (isSorting ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 text-white') : (isSorting ? 'text-zinc-600 pointer-events-none' : 'text-zinc-300 hover:bg-zinc-800')}`}
+            className={`px-3 py-1 text-sm ${isSorting ? 'bg-zinc-700 text-zinc-400' : 'bg-blue-600 hover:bg-blue-500'}`}
           >
-            {opt.label}
+            Generate
           </button>
-        ))}
+          <button
+            onClick={() => visualizeSorting()}
+            disabled={isSorting}
+            className={`px-3 py-1 text-sm ${isSorting ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 hover:bg-green-500'}`}
+          >
+            Start
+          </button>
+          <button
+            onClick={stopSorting}
+            disabled={!isSorting}
+            className={`px-3 py-1 text-sm ${!isSorting ? 'bg-zinc-800 text-zinc-500' : 'bg-red-600 hover:bg-red-500'}`}
+          >
+            Stop
+          </button>
+        </div>
       </div>
-      {/* Scroll indicator gradient */}
-      <div className="absolute bottom-2 left-2 right-2 h-8 pointer-events-none" style={{
-        background: 'linear-gradient(to top, rgba(24, 24, 27, 0.95), transparent)'
-      }}></div>
-    </div>
 
-    <div className="flex-1 order-1 md:order-2 w-full">
-      <div className="relative h-64 md:h-96 w-full border border-zinc-800 bg-zinc-900 p-2 overflow-hidden">
-        {array.map((item, idx) => {
-          const barWidth = 100 / Math.max(1, array.length);
-          const leftPercent = idx * barWidth;
-          // Scale bar height relative to container height as a percentage
-          // Use same domain as buildShuffledArray (minVal..maxVal)
-          const minVal = 5;
-          const maxVal = 105;
-          const v = Math.min(Math.max(item.value, minVal), maxVal);
-          let heightPercent = ((v - minVal) / (maxVal - minVal)) * 100;
-          // Ensure the smallest bar is visible (minimum 3% of container height)
-          const minHeightPercent = 0.5;
-          if (heightPercent < minHeightPercent) heightPercent = minHeightPercent;
+      {/* Main Content */}
+      <div className="flex-1 flex p-3 gap-3 overflow-hidden min-h-0">
+        {/* Algorithm List */}
+        <div className="w-44 bg-zinc-950 border border-zinc-800 rounded flex flex-col min-h-0">
+          <div className="px-3 py-2 border-b border-zinc-800 text-xs text-zinc-500 uppercase tracking-wider shrink-0">
+            Algorithms
+          </div>
+          <div className="flex-1 overflow-auto p-1 space-y-0.5 min-h-0">
+            {([
+              { value: 'adaptivemerge', label: 'Adaptive Merge' },
+              { value: 'americanflag', label: 'American Flag' },
+              { value: 'bitonic', label: 'Bitonic' },
+              { value: 'block', label: 'Block' },
+              { value: 'blockmerge', label: 'Block Merge' },
+              { value: 'bogo', label: 'Bogo' },
+              { value: 'bubble', label: 'Bubble' },
+              { value: 'bucket', label: 'Bucket' },
+              { value: 'cocktail', label: 'Cocktail Shaker' },
+              { value: 'comb', label: 'Comb' },
+              { value: 'counting', label: 'Counting' },
+              { value: 'cycle', label: 'Cycle' },
+              { value: 'dualpivot', label: 'Dual-Pivot Quick' },
+              { value: 'flash', label: 'Flash' },
+              { value: 'franceschini', label: 'Franceschini' },
+              { value: 'gnome', label: 'Gnome' },
+              { value: 'gravity', label: 'Gravity' },
+              { value: 'heap', label: 'Heap' },
+              { value: 'insertion', label: 'Insertion' },
+              { value: 'intro', label: 'Intro' },
+              { value: 'library', label: 'Library' },
+              { value: 'merge', label: 'Merge' },
+              { value: 'minmaxselection', label: 'Min-Max Selection' },
+              { value: 'oddeven', label: 'Odd-Even' },
+              { value: 'oddevenmerge', label: 'Odd-Even Merge' },
+              { value: 'pairwise', label: 'Pairwise Network' },
+              { value: 'pancake', label: 'Pancake' },
+              { value: 'patience', label: 'Patience' },
+              { value: 'pdq', label: 'PDQ' },
+              { value: 'pigeonhole', label: 'Pigeonhole' },
+              { value: 'proxmap', label: 'Proxmap' },
+              { value: 'quick', label: 'Quick' },
+              { value: 'radix', label: 'Radix' },
+              { value: 'selection', label: 'Selection' },
+              { value: 'shell', label: 'Shell' },
+              { value: 'smooth', label: 'Smooth' },
+              { value: 'spreadsort', label: 'Spreadsort' },
+              { value: 'stalin', label: 'Stalin' },
+              { value: 'stooge', label: 'Stooge' },
+              { value: 'strand', label: 'Strand' },
+              { value: 'stupid', label: 'Stupid' },
+              { value: 'timsort', label: 'Timsort' },
+              { value: 'tournament', label: 'Tournament' },
+              { value: 'tree', label: 'Tree' }
+            ]).map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => { if (!isSorting) setAlgorithm(opt.value); }}
+                disabled={isSorting}
+                className={`w-full text-left px-2 py-1.5 text-xs rounded transition-colors ${
+                  algorithm === opt.value
+                    ? 'bg-green-600 text-white'
+                    : isSorting
+                      ? 'text-zinc-600'
+                      : 'text-zinc-300 hover:bg-zinc-800'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
-          // Normalize current indices to a safe array of numeric indexes only
-          const rawCi = currentIndices || [];
-          const ci = Array.isArray(rawCi) ? rawCi.filter(x => Number.isInteger(x) && x >= 0 && x < array.length) : [];
+        {/* Visualization */}
+        <div className="flex-1 flex flex-col gap-2 min-h-0">
+          {/* Controls */}
+          <div className="flex items-center gap-6 bg-zinc-950 border border-zinc-800 rounded px-4 py-2 shrink-0">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500">Size:</span>
+              {(algorithm === 'bitonic' || algorithm === 'oddevenmerge' || algorithm === 'pairwise') ? (
+                <select
+                  value={size}
+                  disabled={isSorting}
+                  onChange={(e) => setSize(Number(e.target.value))}
+                  className={`bg-zinc-900 border border-zinc-700 text-white text-sm px-2 py-1 ${isSorting ? 'opacity-60' : ''}`}
+                >
+                  <option value={16}>16</option>
+                  <option value={32}>32</option>
+                  <option value={64}>64</option>
+                  <option value={128}>128</option>
+                  <option value={256}>256</option>
+                </select>
+              ) : (
+                <>
+                  <input
+                    type="range"
+                    min="10"
+                    max="250"
+                    value={size}
+                    disabled={isSorting}
+                    onChange={(e) => setSize(Number(e.target.value))}
+                    className={`w-24 ${isSorting ? 'opacity-60' : ''}`}
+                  />
+                  <span className="text-xs text-zinc-400 w-8">{size}</span>
+                </>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500">Speed:</span>
+              <input
+                type="range"
+                min="1"
+                max="30"
+                value={speed}
+                disabled={isSorting}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+                className={`w-24 ${isSorting ? 'opacity-60' : ''}`}
+              />
+              <span className="text-xs text-zinc-400 w-12">{speed}ms</span>
+            </div>
+          </div>
 
-          // color logic: prefer roles (sorted, pivot, min, compare, swap, overwrite)
-          let colorClass = 'bg-blue-400';
+          {/* Bar Chart */}
+          <div className="flex-1 bg-zinc-950 border border-zinc-800 rounded p-2 min-h-0">
+            <div className="relative h-full w-full">
+              {array.map((item, idx) => {
+                const barWidth = 100 / Math.max(1, array.length);
+                const leftPercent = idx * barWidth;
+                const minVal = 5;
+                const maxVal = 105;
+                const v = Math.min(Math.max(item.value, minVal), maxVal);
+                let heightPercent = ((v - minVal) / (maxVal - minVal)) * 100;
+                const minHeightPercent = 0.5;
+                if (heightPercent < minHeightPercent) heightPercent = minHeightPercent;
 
-          // Sorted and pivot highlights are straightforward
-          if (currentStepType === 'sorted' && ci.includes(idx)) {
-            colorClass = 'bg-green-500';
-          } else if (currentStepType === 'pivot' && ci.includes(idx)) {
-            colorClass = 'bg-purple-500';
-          } else if (currentStepType === 'swap' && ci.includes(idx)) {
-            colorClass = 'bg-red-500';
-          } else if (algorithm === 'selection' && ci.length > 0) {
-            // selection compare may include [startIdx, minIdx, compIdx]
-            if (ci.length === 3) {
-              const [startIdx, minIdx, compIdx] = ci;
-              if (idx === startIdx) colorClass = 'bg-teal-400';
-              else if (idx === minIdx) colorClass = 'bg-yellow-400';
-              else if (idx === compIdx) colorClass = 'bg-orange-400';
-            } else if (ci.length === 2) {
-              // fallback two-index highlights (min and compare)
-              const [a, b] = ci;
-              if (idx === a) colorClass = 'bg-yellow-400';
-              else if (idx === b) colorClass = 'bg-orange-400';
-            }
-          } else if ((currentStepType === 'compare' || currentStepType === 'overwrite') && ci.includes(idx)) {
-            // generic compare/overwrite highlights
-            colorClass = 'bg-orange-400';
-          }
+                const rawCi = currentIndices || [];
+                const ci = Array.isArray(rawCi) ? rawCi.filter(x => Number.isInteger(x) && x >= 0 && x < array.length) : [];
 
-          return (
-            <div
-              key={idx}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: `${leftPercent}%`,
-                width: `calc(${100 / array.length}% - 1px)`,
-                height: `${heightPercent}%`,
-                transition: animateSwap ? 'height 0.25s ease' : 'none',
-              }}
-              className={`${colorClass} mx-[0.5px]`}
-            />
-          );
-        })}
+                let colorClass = 'bg-blue-400';
+
+                if (currentStepType === 'sorted' && ci.includes(idx)) {
+                  colorClass = 'bg-green-500';
+                } else if (currentStepType === 'pivot' && ci.includes(idx)) {
+                  colorClass = 'bg-purple-500';
+                } else if (currentStepType === 'swap' && ci.includes(idx)) {
+                  colorClass = 'bg-red-500';
+                } else if (algorithm === 'selection' && ci.length > 0) {
+                  if (ci.length === 3) {
+                    const [startIdx, minIdx, compIdx] = ci;
+                    if (idx === startIdx) colorClass = 'bg-teal-400';
+                    else if (idx === minIdx) colorClass = 'bg-yellow-400';
+                    else if (idx === compIdx) colorClass = 'bg-orange-400';
+                  } else if (ci.length === 2) {
+                    const [a, b] = ci;
+                    if (idx === a) colorClass = 'bg-yellow-400';
+                    else if (idx === b) colorClass = 'bg-orange-400';
+                  }
+                } else if ((currentStepType === 'compare' || currentStepType === 'overwrite') && ci.includes(idx)) {
+                  colorClass = 'bg-orange-400';
+                }
+
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: `${leftPercent}%`,
+                      width: `calc(${100 / array.length}% - 1px)`,
+                      height: `${heightPercent}%`,
+                      transition: animateSwap ? 'height 0.25s ease' : 'none',
+                    }}
+                    className={`${colorClass} mx-[0.5px]`}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Info Panel */}
+        <div className="w-64 flex flex-col gap-2 min-h-0 overflow-auto">
+          <div className="bg-zinc-900 border border-zinc-700 p-3 rounded shrink-0">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-1">How It Works</div>
+            <div className="text-xs text-zinc-500 mb-2">{currentInfo.complexity}</div>
+            <ol className="text-xs text-zinc-300 space-y-0.5 list-decimal ml-4">
+              {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
+            </ol>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-700 p-3 rounded shrink-0">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-1">Legend</div>
+            <div className="grid grid-cols-2 gap-1 text-xs">
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-blue-400"></div>
+                <span className="text-zinc-400">Unsorted</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-orange-400"></div>
+                <span className="text-zinc-400">Comparing</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-red-500"></div>
+                <span className="text-zinc-400">Swapping</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-purple-500"></div>
+                <span className="text-zinc-400">Pivot</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-green-500"></div>
+                <span className="text-zinc-400">Sorted</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-700 p-3 rounded shrink-0">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-1">Complexity</div>
+            <div className="text-xs text-zinc-400 space-y-0.5">
+              <div><span className="text-green-400">O(n log n)</span>: Merge, Quick, Heap</div>
+              <div><span className="text-yellow-400">O(n²)</span>: Bubble, Selection</div>
+              <div><span className="text-orange-400">O(n+k)</span>: Counting, Radix</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div className="w-full md:w-full text-sm text-zinc-400 px-4 order-2 md:order-3">
-      <h3 className="font-semibold">How it works</h3>
-      <div className="text-xs text-zinc-500 mb-2">{currentInfo.complexity}</div>
-      <ol className="list-decimal ml-6">
-        {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
-      </ol>
+      <footer className="text-center py-1 border-t border-zinc-800 shrink-0">
+        <a
+          href="https://faigan.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-zinc-500 hover:text-blue-400 transition-colors duration-200 text-xs"
+        >
+          faigan.com
+        </a>
+      </footer>
     </div>
-  </div>
-
-  <footer className="text-center py-4 mt-8">
-    <a
-      href="https://faigan.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-zinc-500 hover:text-blue-400 transition-colors duration-200"
-    >
-      faigan.com
-    </a>
-  </footer>
-</div>
   );
 }

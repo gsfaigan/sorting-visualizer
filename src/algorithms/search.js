@@ -346,11 +346,11 @@ export const SEARCH_ALGORITHM_DEFAULTS = {
 };
 
 export const searchAlgorithmList = [
-  { value: 'linear', label: 'Linear Search' },
   { value: 'binary', label: 'Binary Search' },
-  { value: 'jump', label: 'Jump Search' },
-  { value: 'interpolation', label: 'Interpolation Search' },
   { value: 'exponential', label: 'Exponential Search' },
-  { value: 'ternary', label: 'Ternary Search' },
-  { value: 'fibonacci', label: 'Fibonacci Search' }
+  { value: 'fibonacci', label: 'Fibonacci Search' },
+  { value: 'interpolation', label: 'Interpolation Search' },
+  { value: 'jump', label: 'Jump Search' },
+  { value: 'linear', label: 'Linear Search' },
+  { value: 'ternary', label: 'Ternary Search' }
 ];

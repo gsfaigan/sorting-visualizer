@@ -277,123 +277,84 @@ export default function PathfindingVisualizer({ onBack, initialAlgorithm }) {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-black text-white p-4" onMouseUp={handleCellMouseUp}>
-      <style>{`
-        .algorithm-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .algorithm-scroll::-webkit-scrollbar-track {
-          background: #09090b;
-        }
-        .algorithm-scroll::-webkit-scrollbar-thumb {
-          background: #27272a;
-        }
-        .algorithm-scroll::-webkit-scrollbar-thumb:hover {
-          background: #3f3f46;
-        }
-      `}</style>
-
-      <button
-        onClick={onBack}
-        disabled={isRunning}
-        className={`absolute top-4 left-4 px-3 py-1 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-500 pointer-events-none' : 'bg-zinc-800 hover:bg-zinc-700 text-white'}`}
-      >
-        &larr; Back
-      </button>
-
-      <h1 className="text-3xl font-bold mb-6">Pathfinding Algorithm Visualizer</h1>
-
-      <div className="flex gap-2 mb-4 items-center flex-wrap justify-center">
+    <div className="min-h-screen bg-black text-white flex flex-col" onMouseUp={handleCellMouseUp}>
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
         <button
-          onClick={generateMaze}
+          onClick={onBack}
           disabled={isRunning}
-          className={`px-3 py-2 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+          className={`px-3 py-1 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-500' : 'bg-zinc-800 hover:bg-zinc-700'}`}
         >
-          Generate Maze
+          &larr; Back
         </button>
-        <button
-          onClick={clearWalls}
-          disabled={isRunning}
-          className={`px-3 py-2 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-zinc-700 hover:bg-zinc-600 text-white'}`}
-        >
-          Clear Walls
-        </button>
-        <button
-          onClick={clearVisualization}
-          disabled={isRunning}
-          className={`px-3 py-2 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-zinc-700 hover:bg-zinc-600 text-white'}`}
-        >
-          Clear Path
-        </button>
-
-        <div className="h-6 w-px bg-zinc-700 mx-2"></div>
-
-        <div className="flex gap-1">
-          {[
-            { mode: 'wall', label: 'Wall', color: 'bg-zinc-600' },
-            { mode: 'erase', label: 'Erase', color: 'bg-zinc-800' },
-            { mode: 'start', label: 'Start', color: 'bg-green-500' },
-            { mode: 'end', label: 'End', color: 'bg-red-500' }
-          ].map(({ mode, label, color }) => (
-            <button
-              key={mode}
-              onClick={() => setDrawMode(mode)}
-              disabled={isRunning}
-              className={`px-3 py-1 text-sm flex items-center gap-2 ${drawMode === mode ? 'ring-2 ring-blue-400' : ''} ${isRunning ? 'opacity-50' : ''}`}
-            >
-              <span className={`w-3 h-3 ${color}`}></span>
-              {label}
-            </button>
-          ))}
+        <h1 className="text-sm font-semibold tracking-widest text-zinc-300">PATHFINDING VISUALIZER</h1>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={generateMaze}
+            disabled={isRunning}
+            className={`px-3 py-1 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-blue-600 hover:bg-blue-500'}`}
+          >
+            Generate Maze
+          </button>
+          <button
+            onClick={clearWalls}
+            disabled={isRunning}
+            className={`px-3 py-1 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-zinc-700 hover:bg-zinc-600'}`}
+          >
+            Clear Walls
+          </button>
+          <button
+            onClick={clearVisualization}
+            disabled={isRunning}
+            className={`px-3 py-1 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-zinc-700 hover:bg-zinc-600'}`}
+          >
+            Clear Path
+          </button>
+          <div className="h-6 w-px bg-zinc-700 mx-1"></div>
+          <button
+            onClick={visualizePathfinding}
+            disabled={isRunning}
+            className={`px-3 py-1 text-sm ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 hover:bg-green-500'}`}
+          >
+            Start
+          </button>
+          <button
+            onClick={stopPathfinding}
+            disabled={!isRunning}
+            className={`px-3 py-1 text-sm ${!isRunning ? 'bg-zinc-800 text-zinc-500' : 'bg-red-600 hover:bg-red-500'}`}
+          >
+            Stop
+          </button>
         </div>
-
-        <div className="h-6 w-px bg-zinc-700 mx-2"></div>
-
-        <button
-          onClick={visualizePathfinding}
-          disabled={isRunning}
-          className={`px-4 py-2 ${isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-green-500 hover:bg-green-600 text-white'}`}
-        >
-          Start
-        </button>
-        <button
-          onClick={stopPathfinding}
-          disabled={!isRunning}
-          className={`px-4 py-2 ${!isRunning ? 'bg-zinc-800 text-zinc-500' : 'bg-red-600 hover:bg-red-700 text-white'}`}
-        >
-          Stop
-        </button>
       </div>
 
+      {/* Result Banner */}
       {searchResult && (
-        <div className={`mb-4 px-4 py-2 ${searchResult === 'found' ? 'bg-green-600' : 'bg-red-600'}`}>
+        <div className={`px-4 py-2 text-center text-sm ${searchResult === 'found' ? 'bg-green-600' : 'bg-red-600'}`}>
           {searchResult === 'found' ? 'Path found!' : 'No path exists'}
         </div>
       )}
 
-      <div className="flex flex-col items-center mb-4">
-        <label>Speed (ms): {speed}</label>
-        <input
-          type="range"
-          min="5"
-          max="100"
-          value={speed}
-          disabled={isRunning}
-          onChange={(e) => setSpeed(Number(e.target.value))}
-          className={`w-64 ${isRunning ? 'opacity-60' : ''}`}
-        />
-      </div>
-
-      <div className="w-full max-w-6xl flex flex-col md:flex-row md:flex-wrap gap-4 items-start">
-        <div className="w-full md:w-48 bg-zinc-900 p-2 flex flex-col relative order-3 md:order-1">
-          <div className="text-sm text-zinc-400 font-semibold mb-2 text-center">Algorithms</div>
-          <div className="space-y-1 algorithm-scroll">
+      {/* Main Content */}
+      <div className="flex-1 flex p-4 gap-4 overflow-auto">
+        {/* Algorithm List */}
+        <div className="w-48 bg-zinc-950 border border-zinc-800 rounded flex flex-col">
+          <div className="px-3 py-2 border-b border-zinc-800 text-xs text-zinc-500 uppercase tracking-wider">
+            Algorithms
+          </div>
+          <div className="flex-1 overflow-auto p-2 space-y-1">
             {pathfindingAlgorithmList.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => { if (!isRunning) setAlgorithm(opt.value); }}
                 disabled={isRunning}
-                className={`w-full text-left px-3 py-2 text-sm ${algorithm === opt.value ? (isRunning ? 'bg-zinc-700 text-zinc-400' : 'bg-green-600 text-white') : (isRunning ? 'text-zinc-600' : 'text-zinc-300 hover:bg-zinc-800')}`}
+                className={`w-full text-left px-3 py-2 text-sm rounded transition-colors ${
+                  algorithm === opt.value
+                    ? 'bg-green-600 text-white'
+                    : isRunning
+                      ? 'text-zinc-600'
+                      : 'text-zinc-300 hover:bg-zinc-800'
+                }`}
               >
                 {opt.label}
               </button>
@@ -401,52 +362,133 @@ export default function PathfindingVisualizer({ onBack, initialAlgorithm }) {
           </div>
         </div>
 
-        <div className="flex-1 order-1 md:order-2 flex justify-center">
-          <div
-            className="border border-zinc-800 bg-zinc-950 p-1 inline-block select-none"
-            style={{ cursor: isRunning ? 'default' : 'crosshair' }}
-          >
-            {grid.map((row, rowIdx) => (
-              <div key={rowIdx} className="flex">
-                {row.map((cell, colIdx) => (
-                  <div
-                    key={colIdx}
-                    className={`w-4 h-4 border border-zinc-800 ${getCellClass(rowIdx, colIdx)} transition-colors duration-75`}
-                    onMouseDown={() => handleCellMouseDown(rowIdx, colIdx)}
-                    onMouseEnter={() => handleCellMouseEnter(rowIdx, colIdx)}
-                  />
-                ))}
-              </div>
-            ))}
+        {/* Grid Area */}
+        <div className="flex-1 flex flex-col gap-4">
+          {/* Controls */}
+          <div className="flex items-center gap-4 bg-zinc-950 border border-zinc-800 rounded px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500">Speed:</span>
+              <input
+                type="range"
+                min="5"
+                max="100"
+                value={speed}
+                disabled={isRunning}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+                className={`w-24 ${isRunning ? 'opacity-60' : ''}`}
+              />
+              <span className="text-xs text-zinc-400 w-12">{speed}ms</span>
+            </div>
+
+            <div className="h-6 w-px bg-zinc-700"></div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-zinc-500">Draw:</span>
+              {[
+                { mode: 'wall', label: 'Wall', color: 'bg-zinc-600' },
+                { mode: 'erase', label: 'Erase', color: 'bg-zinc-900 border border-zinc-700' },
+                { mode: 'start', label: 'Start', color: 'bg-green-500' },
+                { mode: 'end', label: 'End', color: 'bg-red-500' }
+              ].map(({ mode, label, color }) => (
+                <button
+                  key={mode}
+                  onClick={() => setDrawMode(mode)}
+                  disabled={isRunning}
+                  className={`px-2 py-1 text-xs flex items-center gap-1 rounded ${
+                    drawMode === mode ? 'ring-2 ring-blue-400' : ''
+                  } ${isRunning ? 'opacity-50' : ''}`}
+                >
+                  <span className={`w-3 h-3 ${color}`}></span>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Grid */}
+          <div className="flex-1 bg-zinc-950 border border-zinc-800 rounded p-4 flex items-center justify-center">
+            <div
+              className="inline-block select-none"
+              style={{ cursor: isRunning ? 'default' : 'crosshair' }}
+            >
+              {grid.map((row, rowIdx) => (
+                <div key={rowIdx} className="flex">
+                  {row.map((cell, colIdx) => (
+                    <div
+                      key={colIdx}
+                      className={`w-4 h-4 border border-zinc-800 ${getCellClass(rowIdx, colIdx)} transition-colors duration-75`}
+                      onMouseDown={() => handleCellMouseDown(rowIdx, colIdx)}
+                      onMouseEnter={() => handleCellMouseEnter(rowIdx, colIdx)}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="w-full md:w-full text-sm text-zinc-400 px-4 order-2 md:order-3">
-          <h3 className="font-semibold">How it works</h3>
-          <div className="text-xs text-zinc-500 mb-2">{currentInfo.complexity}</div>
-          <ol className="list-decimal ml-6 mb-4">
-            {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
-          </ol>
-          <div className="flex flex-wrap gap-4 text-xs mt-4">
-            <div className="flex items-center gap-1"><div className="w-4 h-4 bg-green-500"></div> Start</div>
-            <div className="flex items-center gap-1"><div className="w-4 h-4 bg-red-500"></div> End</div>
-            <div className="flex items-center gap-1"><div className="w-4 h-4 bg-zinc-700"></div> Wall</div>
-            <div className="flex items-center gap-1"><div className="w-4 h-4 bg-blue-300"></div> Exploring</div>
-            <div className="flex items-center gap-1"><div className="w-4 h-4 bg-blue-500"></div> Visited</div>
-            <div className="flex items-center gap-1"><div className="w-4 h-4 bg-yellow-400"></div> Path</div>
+        {/* Info Panel */}
+        <div className="w-72 space-y-4">
+          <div className="bg-zinc-900 border border-zinc-700 p-4 rounded">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">How It Works</div>
+            <div className="text-xs text-zinc-500 mb-3">{currentInfo.complexity}</div>
+            <ol className="text-sm text-zinc-300 space-y-1 list-decimal ml-4">
+              {currentInfo.steps.map((s, i) => <li key={i}>{s}</li>)}
+            </ol>
           </div>
-          <div className="mt-2 text-xs text-zinc-500">
+
+          <div className="bg-zinc-900 border border-zinc-700 p-4 rounded">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">Legend</div>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-green-500"></div>
+                <span className="text-zinc-400">Start</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-red-500"></div>
+                <span className="text-zinc-400">End</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-zinc-700"></div>
+                <span className="text-zinc-400">Wall</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-blue-300"></div>
+                <span className="text-zinc-400">Exploring</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-blue-500"></div>
+                <span className="text-zinc-400">Visited</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-yellow-400"></div>
+                <span className="text-zinc-400">Path</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900 border border-zinc-700 p-4 rounded">
+            <div className="text-xs text-blue-400 uppercase tracking-wider mb-2">Algorithm Types</div>
+            <div className="text-xs text-zinc-400 space-y-2">
+              <div><span className="text-green-400">BFS</span>: Guarantees shortest path (unweighted)</div>
+              <div><span className="text-green-400">DFS</span>: Explores deeply, not optimal</div>
+              <div><span className="text-green-400">A*</span>: Optimal with heuristic guidance</div>
+              <div><span className="text-green-400">Dijkstra</span>: Optimal for weighted graphs</div>
+            </div>
+          </div>
+
+          <div className="text-xs text-zinc-500 px-2">
             Click and drag to draw walls. Use the buttons above to set start/end points.
           </div>
         </div>
       </div>
 
-      <footer className="text-center py-4 mt-8">
+      <footer className="text-center py-2 border-t border-zinc-800">
         <a
           href="https://faigan.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-zinc-500 hover:text-blue-400 transition-colors duration-200"
+          className="text-zinc-500 hover:text-blue-400 transition-colors duration-200 text-xs"
         >
           faigan.com
         </a>

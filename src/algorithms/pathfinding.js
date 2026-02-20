@@ -538,11 +538,11 @@ export const PATHFINDING_ALGORITHM_DEFAULTS = {
 };
 
 export const pathfindingAlgorithmList = [
+  { value: 'astar', label: 'A* Search' },
+  { value: 'bidirectional', label: 'Bidirectional BFS' },
   { value: 'bfs', label: 'Breadth-First Search' },
   { value: 'dfs', label: 'Depth-First Search' },
   { value: 'dijkstra', label: "Dijkstra's Algorithm" },
-  { value: 'astar', label: 'A* Search' },
   { value: 'greedy', label: 'Greedy Best-First' },
-  { value: 'bidirectional', label: 'Bidirectional BFS' },
   { value: 'jps', label: 'Jump Point Search' }
 ];
