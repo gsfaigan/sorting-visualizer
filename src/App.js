@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 // Shared
 import Home from "./components/shared/Home";
 // Sorting
@@ -41,49 +42,63 @@ export default function App() {
     // Keep selectedCategory so Home shows the algorithm list for that category
   };
 
+  let view;
   switch (currentView) {
     case 'sort':
-      return <SortingVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;
+      view = <SortingVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;
+      break;
     case 'search':
-      return <SearchVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;
+      view = <SearchVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;
+      break;
     case 'pathfind':
-      return <PathfindingVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;
+      view = <PathfindingVisualizer onBack={handleBack} initialAlgorithm={initialAlgorithm} />;
+      break;
     case 'ds':
       switch (initialAlgorithm) {
-        case 'singly':    return <LinkedListVisualizer type="singly" onBack={handleBack} />;
-        case 'doubly':    return <LinkedListVisualizer type="doubly" onBack={handleBack} />;
-        case 'stack':     return <StackQueueVisualizer type="stack"  onBack={handleBack} />;
-        case 'queue':     return <StackQueueVisualizer type="queue"  onBack={handleBack} />;
-        case 'heap':      return <HeapVisualizer        onBack={handleBack} />;
-        case 'pq':        return <PriorityQueueVisualizer onBack={handleBack} />;
-        case 'bst':       return <BSTVisualizer          onBack={handleBack} />;
-        case 'bst-algos': return <BSTAlgorithmsVisualizer onBack={handleBack} />;
-        case 'nary':      return <NaryTreeVisualizer      onBack={handleBack} />;
-        default:          return <Home onSelectAlgorithm={handleSelectAlgorithm} />;
+        case 'singly':    view = <LinkedListVisualizer type="singly" onBack={handleBack} />; break;
+        case 'doubly':    view = <LinkedListVisualizer type="doubly" onBack={handleBack} />; break;
+        case 'stack':     view = <StackQueueVisualizer type="stack"  onBack={handleBack} />; break;
+        case 'queue':     view = <StackQueueVisualizer type="queue"  onBack={handleBack} />; break;
+        case 'heap':      view = <HeapVisualizer        onBack={handleBack} />; break;
+        case 'pq':        view = <PriorityQueueVisualizer onBack={handleBack} />; break;
+        case 'bst':       view = <BSTVisualizer          onBack={handleBack} />; break;
+        case 'bst-algos': view = <BSTAlgorithmsVisualizer onBack={handleBack} />; break;
+        case 'nary':      view = <NaryTreeVisualizer      onBack={handleBack} />; break;
+        default:          view = <Home onSelectAlgorithm={handleSelectAlgorithm} />;
       }
+      break;
     case 'cpp':
       switch (initialAlgorithm) {
-        case 'io':            return <CppIOVisualizer       onBack={handleBack} />;
-        case 'filestreams':   return <CppIOVisualizer       onBack={handleBack} initialTab="file" />;
-        case 'stringstreams': return <CppIOVisualizer       onBack={handleBack} initialTab="string" />;
-        case 'memory':        return <CppMemoryVisualizer   onBack={handleBack} initialTab="memory" />;
-        case 'pointers':      return <CppMemoryVisualizer   onBack={handleBack} initialTab="pointers" />;
-        case 'types':         return <CppMemoryVisualizer   onBack={handleBack} initialTab="types" />;
-        case 'bigo':          return <BigOVisualizer        onBack={handleBack} />;
-        case 'hanoi':         return <TowerOfHanoiVisualizer onBack={handleBack} />;
-        default:              return <Home onSelectAlgorithm={handleSelectAlgorithm} />;
+        case 'io':            view = <CppIOVisualizer       onBack={handleBack} />; break;
+        case 'filestreams':   view = <CppIOVisualizer       onBack={handleBack} initialTab="file" />; break;
+        case 'stringstreams': view = <CppIOVisualizer       onBack={handleBack} initialTab="string" />; break;
+        case 'memory':        view = <CppMemoryVisualizer   onBack={handleBack} initialTab="memory" />; break;
+        case 'pointers':      view = <CppMemoryVisualizer   onBack={handleBack} initialTab="pointers" />; break;
+        case 'types':         view = <CppMemoryVisualizer   onBack={handleBack} initialTab="types" />; break;
+        case 'bigo':          view = <BigOVisualizer        onBack={handleBack} />; break;
+        case 'hanoi':         view = <TowerOfHanoiVisualizer onBack={handleBack} />; break;
+        default:              view = <Home onSelectAlgorithm={handleSelectAlgorithm} />;
       }
+      break;
     case 'bash':
       switch (initialAlgorithm) {
-        case 'filesystem':  return <BashVisualizer onBack={handleBack} initialTab="filesystem" />;
-        case 'permissions': return <BashVisualizer onBack={handleBack} initialTab="permissions" />;
-        case 'terminal':    return <BashVisualizer onBack={handleBack} initialTab="terminal" />;
-        case 'redirection': return <BashVisualizer onBack={handleBack} initialTab="redirection" />;
-        case 'globbing':    return <BashVisualizer onBack={handleBack} initialTab="globbing" />;
-        case 'grep':        return <BashVisualizer onBack={handleBack} initialTab="grep" />;
-        default:            return <Home onSelectAlgorithm={handleSelectAlgorithm} />;
+        case 'filesystem':  view = <BashVisualizer onBack={handleBack} initialTab="filesystem" />; break;
+        case 'permissions': view = <BashVisualizer onBack={handleBack} initialTab="permissions" />; break;
+        case 'terminal':    view = <BashVisualizer onBack={handleBack} initialTab="terminal" />; break;
+        case 'redirection': view = <BashVisualizer onBack={handleBack} initialTab="redirection" />; break;
+        case 'globbing':    view = <BashVisualizer onBack={handleBack} initialTab="globbing" />; break;
+        case 'grep':        view = <BashVisualizer onBack={handleBack} initialTab="grep" />; break;
+        default:            view = <Home onSelectAlgorithm={handleSelectAlgorithm} />;
       }
+      break;
     default:
-      return <Home onSelectAlgorithm={handleSelectAlgorithm} initialCategory={selectedCategory} onClearCategory={() => setSelectedCategory(null)} />;
+      view = <Home onSelectAlgorithm={handleSelectAlgorithm} initialCategory={selectedCategory} onClearCategory={() => setSelectedCategory(null)} />;
   }
+
+  return (
+    <>
+      {view}
+      <Analytics />
+    </>
+  );
 }
